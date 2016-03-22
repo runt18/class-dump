@@ -117,15 +117,15 @@ def build_ios_paths(sdk_root):
 def print_path_dict(sdict):
     print "Frameworks:"
     for path in sdict["frameworks"]:
-        print "    %s" % (path)
+        print "    {0!s}".format((path))
 
     print "Applications:"
     for path in sdict["apps"]:
-        print "    %s" % (path)
+        print "    {0!s}".format((path))
 
     print "Bundles:"
     for path in sdict["bundles"]:
-        print "    %s" % (path)
+        print "    {0!s}".format((path))
 
 def mkdir_ignore(dir):
     try:
@@ -148,7 +148,7 @@ def main(argv):
 
     sdk_root = None
     if args.sdk:
-        sdk_root = subprocess.check_output(shlex.split("xcodebuild -version -sdk %s Path" % args.sdk))
+        sdk_root = subprocess.check_output(shlex.split("xcodebuild -version -sdk {0!s} Path".format(args.sdk)))
     else:
         if args.ios:
             sdk_root = subprocess.check_output(shlex.split("xcodebuild -version -sdk iphoneos Path"))
@@ -214,7 +214,7 @@ def main(argv):
         ext = ext.lstrip(".")
         proc = Popen([ARCH_CD, "--list-arches", path], shell=False, stdout=PIPE)
         arches = proc.stdout.readline().rstrip().split(" ")
-        print "%-10s %-20s %-40s %s" % (ext, arches, base, dirname)
+        print "{0:<10!s} {1:<20!s} {2:<40!s} {3!s}".format(ext, arches, base, dirname)
         proc.stdout.readlines()
         arch_procs = []
         for arch in arches:
@@ -222,28 +222,28 @@ def main(argv):
                 command = [OLD_CD, "-s", "-t", path]
                 command.extend(OLD_OPTS)
                 #print command
-                out = open("%s/%s-%s.txt" % (TESTDIR_OLD, base, ext), "w");
+                out = open("{0!s}/{1!s}-{2!s}.txt".format(TESTDIR_OLD, base, ext), "w");
                 proc = Popen(command, shell=False, stdout=out, stderr=out)
                 arch_procs.append( (proc, out) )
 
                 command = [NEW_CD, "-s", "-t", path]
                 command.extend(NEW_OPTS)
                 #print command
-                out = open("%s/%s-%s.txt" % (TESTDIR_NEW, base, ext), "w");
+                out = open("{0!s}/{1!s}-{2!s}.txt".format(TESTDIR_NEW, base, ext), "w");
                 proc = Popen(command, shell=False, stdout=out, stderr=out)
                 arch_procs.append( (proc, out) )
             else:
                 command = [OLD_CD, "-s", "-t", "--arch", arch, path]
                 command.extend(OLD_OPTS)
                 #print command
-                out = open("%s/%s-%s-%s.txt" % (TESTDIR_OLD, base, arch, ext), "w");
+                out = open("{0!s}/{1!s}-{2!s}-{3!s}.txt".format(TESTDIR_OLD, base, arch, ext), "w");
                 proc = Popen(command, shell=False, stdout=out, stderr=out)
                 arch_procs.append( (proc, out) )
 
                 command = [NEW_CD, "-s", "-t", "--arch", arch, path]
                 command.extend(NEW_OPTS)
                 #print command
-                out = open("%s/%s-%s-%s.txt" % (TESTDIR_NEW, base, arch, ext), "w");
+                out = open("{0!s}/{1!s}-{2!s}-{3!s}.txt".format(TESTDIR_NEW, base, arch, ext), "w");
                 proc = Popen(command, shell=False, stdout=out, stderr=out)
                 arch_procs.append( (proc, out) )
 
@@ -253,7 +253,7 @@ def main(argv):
             out.close
 
     print "Ended tests at", datetime.today().ctime()
-    Popen("ksdiff %s %s" % (TESTDIR_OLD, TESTDIR_NEW), shell=True)
+    Popen("ksdiff {0!s} {1!s}".format(TESTDIR_OLD, TESTDIR_NEW), shell=True)
 
 #----------------------------------------------------------------------
 #
